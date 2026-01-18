@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
   // ✅ Google Search Console verification
   verification: {
-    google: "PASTE_YOUR_GOOGLE_CODE_HERE",
+    google: "353J7VK8Stc7IlxDLOGwJOyLzYs7eBbDs-ptd2R2_DM",
   },
 
   icons: {
