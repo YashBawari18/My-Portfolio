@@ -3,11 +3,12 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Yash Sunder Bawari - Portfolio",
-  description: "Full-stack developer portfolio showcasing projects and skills",
+  title: "Yash Sunder Bawari | Full-Stack Developer Portfolio",
+  description:
+    "Official portfolio of Yash Sunder Bawari, a full-stack developer showcasing projects, skills, and experience.",
   generator: "v0.app",
 
-  // ✅ Google Search Console verification (keep this)
+  // ✅ Google Search Console verification
   verification: {
     google: "PASTE_YOUR_GOOGLE_CODE_HERE",
   },
@@ -39,6 +40,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
+
+        {/* ✅ Person schema for Google name search */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Yash Sunder Bawari",
+              url: "https://my-portfolio-yjfu.vercel.app",
+              jobTitle: "Full-Stack Developer",
+              sameAs: [
+                "https://github.com/YashBawari18",
+                "https://www.linkedin.com/in/yash-bawari-5a3379313/"
+              ],
+            }),
+          }}
+        />
+
         {children}
         <Analytics />
       </body>
