@@ -37,6 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+      <meta name="google-site-verification" content="353J7VK8Stc7IlxDLOGwJOyLzYs7eBbDs-ptd2R2_DM" />
+      </head>
       <body className={`font-sans antialiased`}>
         {children}
         <Analytics />
