@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import type { ReactNode } from "react"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     "Official portfolio of Yash Sunder Bawari, a full-stack developer showcasing projects, skills, and experience.",
   generator: "v0.app",
 
-  // ✅ Google Search Console verification
+  // ✅ Google Search Console verification (CORRECT)
   verification: {
     google: "353J7VK8Stc7IlxDLOGwJOyLzYs7eBbDs-ptd2R2_DM",
   },
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <html lang="en">
@@ -53,7 +54,7 @@ export default function RootLayout({
               jobTitle: "Full-Stack Developer",
               sameAs: [
                 "https://github.com/YashBawari18",
-                "https://www.linkedin.com/in/yash-bawari-5a3379313/"
+                "https://www.linkedin.com/in/yash-bawari-5a3379313/",
               ],
             }),
           }}
