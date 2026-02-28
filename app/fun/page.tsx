@@ -8,6 +8,10 @@ import seminar from "./seminar.jpg";
 import google from "./google.jpeg";
 import badminton from "./badminton.png";
 import hackathon from "./hackathon.jpg";
+import hackathon_win from "./hackathon_win.jpg";
+import codebyte from "./codebyte.jpg";
+
+
 
 import {
   Send,
@@ -32,7 +36,11 @@ interface FunItem {
   description: string;
   image: any;
   icon: string;
+  objectPosition?: string;
+  objectFit?: "object-cover" | "object-contain";
 }
+
+
 
 export default function FunPage() {
   const [searchInput, setSearchInput] = useState("");
@@ -80,7 +88,29 @@ export default function FunPage() {
       image: badminton,
       icon: "🏸",
     },
+    {
+      id: 5,
+      title: "1st Place — NKT TECH FEST '25",
+      description:
+        "Secured first place at Sheth N.K.T.T. College. A reminder that balance, focus, and consistency are the keys to winning.",
+      image: hackathon_win,
+      icon: "🥇",
+      objectPosition: "object-center",
+      objectFit: "object-contain",
+    },
+    {
+      id: 6,
+      title: "CodeByte 2.0 — 2nd Runner-Up",
+      description:
+        "Secured 3rd place at Lokmanya Tilak College of Engineering. 24 hours of coding, intense deployment battles, and unforgettable moments.",
+      image: codebyte,
+      icon: "🥈",
+      objectPosition: "object-center",
+      objectFit: "object-contain",
+    },
+
   ];
+
 
   /* -----------------------------
      SEARCH HANDLER
@@ -161,14 +191,17 @@ export default function FunPage() {
                     "
                   >
                     <div className="rounded-2xl overflow-hidden border border-gray-200 shadow hover:shadow-xl transition bg-white h-full">
-                      
+
                       {/* IMAGE */}
-                      <div className="h-56 bg-gray-100">
+                      <div className="h-56 bg-white">
+
                         <img
                           src={item.image.src}
                           alt={item.title}
-                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                          className={`w-full h-full transition-transform duration-500 hover:scale-105 ${item.objectFit || "object-cover"
+                            } ${item.objectPosition || "object-center"}`}
                         />
+
                       </div>
 
                       {/* CONTENT */}
