@@ -1,34 +1,20 @@
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
 import { Analytics } from "@vercel/analytics/next"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Yash Sunder Bawari | Full-Stack Developer Portfolio",
+  title: "Yash Sunder Bawari | Full-Stack Developer",
   description:
-    "Official portfolio of Yash Sunder Bawari, a full-stack developer showcasing projects, skills, and experience.",
+    "Official portfolio of Yash Sunder Bawari, showcasing premium full-stack projects and skills.",
   generator: "v0.app",
-
-  // ✅ Google Search Console verification (CORRECT)
   verification: {
     google: "353J7VK8Stc7IlxDLOGwJOyLzYs7eBbDs-ptd2R2_DM",
   },
-
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
+    icon: "/favicon.png",
     apple: "/apple-icon.png",
   },
 }
@@ -39,9 +25,8 @@ export default function RootLayout({
   children: ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
-
+    <html lang="en" className="scroll-smooth">
+      <body className="font-sans antialiased bg-white selection:bg-gray-900 selection:text-white">
         {/* ✅ Person schema for Google name search */}
         <script
           type="application/ld+json"
@@ -60,9 +45,14 @@ export default function RootLayout({
           }}
         />
 
-        {children}
+        <div className="flex min-h-screen flex-col relative overflow-x-hidden">
+          <SiteHeader />
+          <main className="flex-1 pb-32">{children}</main>
+          <SiteFooter />
+        </div>
         <Analytics />
       </body>
     </html>
   )
 }
+

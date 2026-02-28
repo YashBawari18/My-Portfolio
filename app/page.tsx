@@ -4,40 +4,32 @@ import type React from "react"
 import dynamic from "next/dynamic"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ChevronRight } from "lucide-react"
-
-// Fix hydration mismatch by disabling SSR for these components
-const CursorTracker = dynamic(() => import("@/components/cursor-tracker"), { ssr: false })
-const Preloader = dynamic(() => import("@/components/preloader"), { ssr: false })
+import { ChevronRight, ArrowUpRight } from "lucide-react"
+import { motion } from "framer-motion"
+import { SearchBar } from "@/components/search-bar"
+import Preloader from "@/components/preloader"
+import CursorTracker from "@/components/cursor-tracker"
 
 export default function PortfolioPage() {
   const router = useRouter()
-  const [searchInput, setSearchInput] = useState("")
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    const query = searchInput.toLowerCase().trim()
-
-    const routes: Record<string, string> = {
-      me: "/me",
-      about: "/me",
-      projects: "/projects",
-      project: "/projects",
-      skills: "/skills",
-      skill: "/skills",
-      fun: "/fun",
-      hobby: "/fun",
-      contact: "/contact",
-      email: "/contact",
-      resume: "/Yash_Bawari_Resume.pdf",
-    }
-
-    const route = routes[query]
-    if (route) {
-      router.push(route)
-      setSearchInput("")
-    }
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
   }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  } as const;
+
+
+
 
   return (
     <main className="w-full bg-white text-gray-900 min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden">
@@ -45,109 +37,99 @@ export default function PortfolioPage() {
       <CursorTracker />
 
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center relative z-10 w-full max-w-3xl mx-auto">
-        <div className="text-center">
-          <p className="text-lg text-gray-600 mb-2">Hey, I'm yash-bawari 👋</p>
-          <h1 className="text-7xl md:text-8xl font-bold mb-12">My Portfolio!</h1>
+      <motion.section
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-col items-center justify-center relative z-10 w-full max-w-3xl mx-auto"
+      >
+        <motion.div variants={itemVariants} className="text-center">
+          <p className="text-xl text-gray-500 mb-4 font-medium tracking-tight">Hey, I'm yash-bawari 👋</p>
+          <h1 className="text-7xl md:text-9xl font-black mb-12 tracking-tighter">My Portfolio!</h1>
 
-          {/* Bit Emoji Card */}
-          <div className="mb-12 flex justify-center">
-            <div className="w-56 h-56 rounded-3xl bg-black flex items-center justify-center shadow-2xl overflow-hidden">
-              <img src="/images/bit-emoji.png" alt="Yash coding" className="w-full h-full object-cover" />
+          {/* Memoji Card with Hover Effect */}
+          <motion.div
+            variants={itemVariants}
+            className="mb-12 flex justify-center"
+            whileHover={{ scale: 1.05, rotate: -2 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <div className="w-64 h-64 flex items-center justify-center rounded-full overflow-hidden">
+              <img src="/images/memoji.png" alt="Yash coding" className="w-full h-full object-contain" />
             </div>
-          </div>
+          </motion.div>
 
-          {/* Resume Buttons */}
-          <div className="flex justify-center gap-4 mb-8">
-            {/* 1️⃣ VIEW RESUME */}
+          {/* Action Buttons */}
+          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-4 mb-8">
             <a
               href="/Yash_Bawari_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-900 text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-all active:scale-95"
+              className="bg-gray-900 text-white px-10 py-4 rounded-full text-base font-bold hover:bg-black transition-all hover:scale-105 active:scale-95 flex items-center gap-2 shadow-xl"
             >
               👀 View Resume
             </a>
-
-            {/* 2️⃣ DOWNLOAD RESUME */}
             <a
               href="/Yash_Bawari_Resume.pdf"
               download="Yash_Bawari_Resume"
-              className="bg-white border border-gray-300 px-8 py-3 rounded-full text-sm font-medium hover:border-gray-400 hover:shadow active:scale-95"
+              className="bg-white text-gray-900 border-2 border-gray-100 px-10 py-4 rounded-full text-base font-bold hover:border-gray-200 hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 shadow-sm"
             >
-              📄 Download Resume
+              📄 Download
             </a>
-          </div>
+          </motion.div>
 
           {/* Navigation Pills */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
+          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-3 mb-12">
             {[
-              { icon: "😊", label: "Me", keyword: "me" },
-              { icon: "📁", label: "Projects", keyword: "projects" },
-              { icon: "📚", label: "Skills", keyword: "skills" },
-              { icon: "🎉", label: "Fun", keyword: "fun" },
-              { icon: "👤", label: "Contact", keyword: "contact" },
+              { icon: "😊", label: "Me", path: "/me" },
+              { icon: "📁", label: "Projects", path: "/projects" },
+              { icon: "📚", label: "Skills", path: "/skills" },
+              { icon: "🎉", label: "Fun", path: "/fun" },
+              { icon: "👤", label: "Contact", path: "/contact" },
             ].map((item) => (
               <button
                 key={item.label}
-                onClick={() => {
-                  const routes: Record<string, string> = {
-                    me: "/me",
-                    projects: "/projects",
-                    skills: "/skills",
-                    fun: "/fun",
-                    contact: "/contact",
-                  }
-                  router.push(routes[item.keyword])
-                }}
-                className="bg-white border border-gray-300 rounded-full py-3 px-6 hover:shadow-md hover:border-gray-400 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                onClick={() => router.push(item.path)}
+                className="bg-gray-50/50 backdrop-blur-sm border border-gray-100 rounded-full py-4 px-8 hover:bg-white hover:shadow-xl hover:border-gray-200 transition-all hover:scale-110 active:scale-95 flex items-center gap-3 group"
               >
-                <span className="text-xl">{item.icon}</span>
-                <span className="font-medium text-gray-700 text-sm">{item.label}</span>
+                <span className="text-2xl group-hover:rotate-12 transition-transform">{item.icon}</span>
+                <span className="font-bold text-gray-800 text-sm tracking-tight">{item.label}</span>
+                <ArrowUpRight className="w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             ))}
-          </div>
+          </motion.div>
 
           {/* Large Search Bar */}
-          <form
-            onSubmit={handleSearch}
-            className="flex items-center bg-gray-100 rounded-full px-8 py-4 w-full max-w-2xl mx-auto mb-12 shadow-lg"
+          <motion.div
+            variants={itemVariants}
+            className="flex justify-center w-full mb-16"
           >
-            <input
-              type="text"
-              placeholder="Ask me anything"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-400 text-base"
-            />
-            <button
-              type="submit"
-              className="ml-4 bg-gray-800 text-white rounded-full p-3 hover:bg-gray-700 transition-colors active:scale-95"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </form>
+            <SearchBar variant="hero" placeholder="Search my work, skills, or achievements..." />
+          </motion.div>
 
-          {/* Helper text for search */}
-          <p className="text-sm text-gray-500 mt-8">
-            Type a keyword (me, projects, skills, fun, contact, resume)
-          </p>
-        </div>
-      </section>
 
-      {/* Background Name */}
-      <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-0 flex items-end justify-center pb-8">
-        <div
-          className="font-black text-gray-900 opacity-50 tracking-wider whitespace-nowrap text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl"
+          <motion.p variants={itemVariants} className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+            Type a keyword: me, projects, skills, fun, contact
+          </motion.p>
+        </motion.div>
+      </motion.section>
+
+      {/* Decorative Background Text */}
+      <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-0 flex items-end justify-center pb-8 select-none overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 0.4, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="font-black text-gray-900 tracking-tighter whitespace-nowrap text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem]"
           style={{
-            backgroundImage: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)",
+            backgroundImage: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
           }}
         >
           yash bawari
-        </div>
+        </motion.div>
       </div>
     </main>
   )

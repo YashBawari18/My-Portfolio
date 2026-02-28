@@ -1,21 +1,14 @@
 "use client";
 
 import type React from "react";
-import Link from "next/link";
 import {
   ChevronLeft,
   ChevronRight,
-  Send,
-  User,
-  Briefcase,
-  BookOpen,
-  Sparkles,
-  Phone,
   X,
   ArrowRight,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Project {
   id: number;
@@ -32,21 +25,7 @@ interface Project {
 
 export default function ProjectsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [searchInput, setSearchInput] = useState("");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  // <-- ADDED: mounted flag to avoid hydration mismatch for client-only attributes
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const projects: Project[] = [
     {
@@ -97,6 +76,22 @@ export default function ProjectsPage() {
         { label: "Github Repo", url: "https://github.com/YashBawari18/Shopify-Clone" },
       ],
     },
+    {
+      id: 4,
+      title: "CareerOrbit AI",
+      subtitle: "AI-Powered Career Intelligence",
+      description: "Track skill decay and bridge learning gaps with AI.",
+      fullDescription:
+        "CareerOrbit AI helps you master your career trajectory in the AI era. Track skill decay, predict your next move, and bridge learning gaps with AI-driven intelligence.",
+      image: "/projects/careerorbit.png",
+      icon: "🚀",
+      gradient: "from-orange-500 to-red-600",
+      features: ["Skill Decay Tracking", "Career Path Prediction", "AI Insights", "Learning Gaps"],
+      links: [
+        { label: "Live Demo", url: "https://careerorbit-ai-3.onrender.com" },
+        { label: "GitHub Repo", url: "https://github.com/YashBawari18/CareerOrbit-AI.git" },
+      ],
+    },
   ];
 
   const visibleProjects = [
@@ -113,197 +108,146 @@ export default function ProjectsPage() {
     setCurrentIndex((prev) => (prev + 1) % projects.length);
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const routes: Record<string, string> = {
-      me: "/me",
-      projects: "/projects",
-      skills: "/skills",
-      fun: "/fun",
-      contact: "/contact",
-    };
-    if (routes[searchInput.toLowerCase()]) router.push(routes[searchInput.toLowerCase()]);
-    setSearchInput("");
-  };
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  } as const;
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  } as const;
+
 
   return (
-    <main className="w-full bg-white text-gray-900 min-h-screen flex flex-col">
-
-      {/* Loader */}
-      {loading && (
-        <div className="fixed bottom-6 right-6 bg-black text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 z-[999]">
-          <span className="text-sm">Gathering information…</span>
-          <div className="flex gap-1">
-            <span className="w-2 h-2 bg-white rounded-full animate-bounce"></span>
-            <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "0.15s" }}></span>
-            <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "0.3s" }}></span>
-          </div>
-        </div>
-      )}
-
-      {/* NAVBAR */}
-      <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-4 z-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex justify-center gap-2 md:gap-3 flex-wrap mb-4">
-            <Link
-              href="/me"
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 hover:border-gray-400 transition-colors text-sm md:text-base"
-            >
-              <User className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="hidden sm:inline">Me</span>
-            </Link>
-            <Link
-              href="/projects"
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 hover:border-gray-400 transition-colors text-sm md:text-base"
-            >
-              <Briefcase className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="hidden sm:inline">Projects</span>
-            </Link>
-            <Link
-              href="/skills"
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 hover:border-gray-400 transition-colors text-sm md:text-base"
-            >
-              <BookOpen className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="hidden sm:inline">Skills</span>
-            </Link>
-            <Link
-              href="/fun"
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 hover:border-gray-400 transition-colors text-sm md:text-base"
-            >
-              <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="hidden sm:inline">Fun</span>
-            </Link>
-            <Link
-              href="/contact"
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 hover:border-gray-400 transition-colors text-sm md:text-base"
-            >
-              <Phone className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="hidden sm:inline">Contact</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-
-      {/* ----------------------------- */}
-      {/* ⭐ PROJECT CARDS SECTION      */}
-      {/* ----------------------------- */}
-      <section className="px-4 py-20">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold mb-12">My Projects</h2>
-
-          {/* ⭐ DESKTOP GRID (UNCHANGED) */}
-          <div className="hidden md:grid grid-cols-3 gap-6">
-            {visibleProjects.map((project) => (
-              <button
-                key={project.id}
-                onClick={() => setSelectedProject(project)}
-                className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group text-left"
-              >
-                <div className="h-48 overflow-hidden flex items-center justify-center bg-gray-100">
-                  <img src={project.image} className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform" />
-                </div>
-                <div className="p-6">
-                  <div className="text-4xl mb-3">{project.icon}</div>
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-gray-600 text-sm">{project.description}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* ⭐ MOBILE CAROUSEL (NEW) */}
-          <div className="md:hidden flex gap-4 overflow-x-auto no-scrollbar pb-4">
-            {visibleProjects.map((project) => (
-              <button
-                key={project.id}
-                onClick={() => setSelectedProject(project)}
-                className="min-w-[260px] rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group text-left flex-shrink-0"
-              >
-                <div className="h-48 overflow-hidden flex items-center justify-center bg-gray-100">
-                  <img src={project.image} className="max-h-full max-w-full object-contain" />
-                </div>
-                <div className="p-6">
-                  <div className="text-4xl mb-3">{project.icon}</div>
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-gray-600 text-sm">{project.description}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Slider buttons (unchanged) */}
-          <div className="flex justify-center gap-4 mt-8">
-            <button onClick={handlePrev} className="p-3 bg-gray-200 rounded-full"><ChevronLeft /></button>
-            <button onClick={handleNext} className="p-3 bg-gray-200 rounded-full"><ChevronRight /></button>
-          </div>
-
-          {/* ⭐ DESCRIPTION PARA (NEW) */}
-          <p className="text-gray-700 mt-10 text-lg leading-relaxed">
-            These are some of the projects I have worked on, focusing on user-centered
-            design, clean UI, and impactful functionality. Each project represents a
-            different area of development—from AI-powered tools to full-stack
-            applications and modern frontend experiences.
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="w-full bg-white text-gray-900 min-h-screen flex flex-col"
+    >
+      <section className="px-4 py-20 max-w-6xl mx-auto">
+        <motion.div variants={itemVariants} className="mb-16">
+          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">My Projects</h1>
+          <p className="text-gray-500 text-xl font-medium max-w-3xl leading-relaxed tracking-tight">
+            A collection of my work, focusing on user-centered design, clean UI, and impactful functionality.
           </p>
-        </div>
+        </motion.div>
+
+        {/* PROJECT GRIDS */}
+        <motion.div variants={itemVariants} className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {visibleProjects.map((project, idx) => (
+                <motion.button
+                  key={`${project.id}-${idx}`}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  onClick={() => setSelectedProject(project)}
+                  className="rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-gray-100 group text-left bg-white h-full flex flex-col"
+                >
+                  <div className="h-56 overflow-hidden flex items-center justify-center bg-gray-50 p-6">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-8 flex-1 flex flex-col">
+                    <div className="text-5xl mb-6 group-hover:scale-110 transition-transform origin-left">{project.icon}</div>
+                    <h3 className="text-2xl font-black mb-3 tracking-tight">{project.title}</h3>
+                    <p className="text-gray-500 font-medium mb-6 line-clamp-2 leading-snug">{project.description}</p>
+                    <div className="mt-auto pt-4 border-t border-gray-50 flex items-center gap-2 text-sm font-bold text-gray-400 group-hover:text-gray-900 transition-colors">
+                      View Project <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* Controls */}
+          <div className="flex justify-center gap-6 mt-12">
+            <button
+              onClick={handlePrev}
+              className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors active:scale-90"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors active:scale-90"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Modal (unchanged) */}
-      {selectedProject && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[200]">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className={`p-8 text-white relative bg-gradient-to-br ${selectedProject.gradient}`}>
-              <button onClick={() => setSelectedProject(null)} className="absolute top-4 right-4 p-2">
-                <X className="w-6 h-6" />
-              </button>
-              <div className="w-full rounded-2xl shadow-md mb-6 overflow-hidden flex items-center justify-center bg-gray-100">
-                <img src={selectedProject.image} className="max-w-full max-h-[60vh] object-contain" />
+      {/* Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[200]"
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white rounded-[3rem] max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl no-scrollbar"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={`p-10 text-white relative bg-gradient-to-br ${selectedProject.gradient}`}>
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="absolute top-6 right-6 p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+                <div className="w-full rounded-[2rem] shadow-2xl mb-10 overflow-hidden flex items-center justify-center bg-white/10 backdrop-blur-md p-4 aspect-video">
+                  <img src={selectedProject.image} className="max-w-full max-h-full object-contain" />
+                </div>
+                <h2 className="text-4xl font-black mb-2 tracking-tighter">{selectedProject.title}</h2>
+                <p className="text-xl font-bold opacity-80 mb-6 tracking-tight">{selectedProject.subtitle}</p>
+                <p className="text-lg leading-relaxed font-medium opacity-90">{selectedProject.fullDescription}</p>
               </div>
-              <h2 className="text-3xl font-bold mb-2">{selectedProject.title}</h2>
-              <p className="opacity-80 mb-4">{selectedProject.subtitle}</p>
-              <p>{selectedProject.fullDescription}</p>
-            </div>
-            <div className="p-8">
-              <h3 className="text-xl font-bold mb-4">Features</h3>
-              <div className="flex flex-wrap gap-3 mb-8">
-                {selectedProject.features.map((f, i) => (
-                  <span key={i} className="px-4 py-2 bg-gray-100 rounded-full text-sm">{f}</span>
-                ))}
+              <div className="p-10">
+                <h3 className="text-xl font-black mb-6 tracking-tight">Key Features</h3>
+                <div className="flex flex-wrap gap-3 mb-12">
+                  {selectedProject.features.map((f, i) => (
+                    <span
+                      key={i}
+                      className="px-6 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold shadow-sm"
+                    >
+                      {f}
+                    </span>
+                  ))}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {selectedProject.links.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-8 py-4 bg-gray-900 text-white rounded-2xl flex items-center justify-center gap-3 font-bold hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl"
+                    >
+                      {link.label} <ArrowRight className="w-5 h-5" />
+                    </a>
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {selectedProject.links.map((link, i) => (
-                  <a key={i} href={link.url} className="px-6 py-3 bg-gray-900 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800">
-                    {link.label} <ArrowRight />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Search Bar */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-4">
-        <form onSubmit={handleSearch} className="max-w-6xl mx-auto flex gap-3">
-          {/* Only render the input after the component mounts to avoid hydration mismatch */}
-          {mounted ? (
-            <input
-              type="text"
-              placeholder="Ask me anything..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="flex-1 px-6 py-3 border border-gray-300 rounded-full"
-            />
-          ) : (
-            // lightweight placeholder (server renders this; it won't be interactive)
-            <div className="flex-1 px-6 py-3 border border-gray-300 rounded-full bg-gray-100" />
-          )}
-          <button type="submit" className="w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center">
-            <Send />
-          </button>
-        </form>
-      </div>
-
-    </main>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
+
