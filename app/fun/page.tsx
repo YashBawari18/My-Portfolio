@@ -5,7 +5,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // IMAGES
@@ -27,7 +27,21 @@ interface FunItem {
 }
 
 export default function FunPage() {
+  const [itemsToShow, setItemsToShow] = useState(3);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(3);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const funItems: FunItem[] = [
     {
@@ -84,11 +98,9 @@ export default function FunPage() {
     },
   ];
 
-  const visibleItems = [
-    funItems[currentIndex],
-    funItems[(currentIndex + 1) % funItems.length],
-    funItems[(currentIndex + 2) % funItems.length],
-  ];
+  const visibleItems = Array.from({ length: itemsToShow }).map(
+    (_, i) => funItems[(currentIndex + i) % funItems.length]
+  );
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + funItems.length) % funItems.length);
@@ -125,7 +137,7 @@ export default function FunPage() {
         </motion.div>
 
         <motion.div variants={itemVariants} className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
             <AnimatePresence mode="popLayout" initial={false}>
               {visibleItems.map((item, idx) => (
                 <motion.div
@@ -144,10 +156,10 @@ export default function FunPage() {
                         } ${item.objectPosition || "object-center"}`}
                     />
                   </div>
-                  <div className="p-8 flex-1 flex flex-col">
-                    <div className="text-5xl mb-6 group-hover:scale-110 transition-transform origin-left">{item.icon}</div>
-                    <h3 className="text-2xl font-black mb-3 tracking-tight">{item.title}</h3>
-                    <p className="text-gray-500 font-medium leading-relaxed">{item.description}</p>
+                  <div className="p-4 md:p-8 flex-1 flex flex-col">
+                    <div className="text-3xl md:text-5xl mb-4 md:mb-6 group-hover:scale-110 transition-transform origin-left">{item.icon}</div>
+                    <h3 className="text-lg md:text-2xl font-black mb-1 md:mb-3 tracking-tight">{item.title}</h3>
+                    <p className="text-gray-500 font-medium leading-tight text-xs md:text-base">{item.description}</p>
                   </div>
                 </motion.div>
               ))}

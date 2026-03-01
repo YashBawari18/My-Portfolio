@@ -29,7 +29,7 @@ export default function SkillsPage() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {/* FRONTEND */}
           <motion.div
             variants={itemVariants}

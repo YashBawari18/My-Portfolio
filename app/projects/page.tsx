@@ -7,7 +7,7 @@ import {
   X,
   ArrowRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Project {
@@ -24,8 +24,22 @@ interface Project {
 }
 
 export default function ProjectsPage() {
+  const [itemsToShow, setItemsToShow] = useState(3);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(3);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const projects: Project[] = [
     {
@@ -94,11 +108,9 @@ export default function ProjectsPage() {
     },
   ];
 
-  const visibleProjects = [
-    projects[currentIndex],
-    projects[(currentIndex + 1) % projects.length],
-    projects[(currentIndex + 2) % projects.length],
-  ];
+  const visibleProjects = Array.from({ length: itemsToShow }).map(
+    (_, i) => projects[(currentIndex + i) % projects.length]
+  );
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
@@ -136,7 +148,7 @@ export default function ProjectsPage() {
 
         {/* PROJECT GRIDS */}
         <motion.div variants={itemVariants} className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
             <AnimatePresence mode="popLayout" initial={false}>
               {visibleProjects.map((project, idx) => (
                 <motion.button
@@ -155,12 +167,12 @@ export default function ProjectsPage() {
                       className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
-                  <div className="p-8 flex-1 flex flex-col">
-                    <div className="text-5xl mb-6 group-hover:scale-110 transition-transform origin-left">{project.icon}</div>
-                    <h3 className="text-2xl font-black mb-3 tracking-tight">{project.title}</h3>
-                    <p className="text-gray-500 font-medium mb-6 line-clamp-2 leading-snug">{project.description}</p>
-                    <div className="mt-auto pt-4 border-t border-gray-50 flex items-center gap-2 text-sm font-bold text-gray-400 group-hover:text-gray-900 transition-colors">
-                      View Project <ChevronRight className="w-4 h-4" />
+                  <div className="p-4 md:p-8 flex-1 flex flex-col">
+                    <div className="text-3xl md:text-5xl mb-4 md:mb-6 group-hover:scale-110 transition-transform origin-left">{project.icon}</div>
+                    <h3 className="text-lg md:text-2xl font-black mb-1 md:mb-3 tracking-tight">{project.title}</h3>
+                    <p className="text-gray-500 font-medium mb-4 md:mb-6 line-clamp-2 leading-tight text-xs md:text-base">{project.description}</p>
+                    <div className="mt-auto pt-2 md:pt-4 border-t border-gray-50 flex items-center gap-2 text-[10px] md:text-sm font-bold text-gray-400 group-hover:text-gray-900 transition-colors">
+                      View Project <ChevronRight className="w-3 h-3 md:w-4 h-4" />
                     </div>
                   </div>
                 </motion.button>
