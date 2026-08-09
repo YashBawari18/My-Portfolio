@@ -41,7 +41,7 @@ export default function MePage() {
       role: "Tech Team Member",
       company: "CSI-CATT",
       period: "2023 - Present",
-      description: "Contributing to technical projects, organizing hackathons, and managing technical infrastructure for college events.",
+      description: "Contributing to technical projects, organizing hackathons, and managing technical infrastructure for college events. 6x Hackathon winner, National Project Level Competition winner.",
       icon: <Code2 className="w-5 h-5" />,
     },
   ];
@@ -51,7 +51,7 @@ export default function MePage() {
       degree: "B.E. in Computer Engineering",
       institution: "Datta Meghe College of Engineering (DMCE)",
       period: "2022 - 2026",
-      details: "Currently in 3rd Year. Focus on Software Engineering, Data Structures, and Algorithms.",
+      details: "Currently in Final Year. Focus on Software Engineering, Data Structures, and Algorithms.",
     },
   ];
 
@@ -96,7 +96,7 @@ export default function MePage() {
               <div className="absolute inset-0 bg-gray-900 rounded-[3rem] rotate-3 group-hover:rotate-0 transition-transform duration-500 -z-10 opacity-5"></div>
               <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-gray-100 -rotate-2 group-hover:rotate-0 transition-transform duration-500 aspect-[4/5] md:aspect-square lg:aspect-[4/5]">
                 <img
-                  src="/images/profile.jpeg"
+                  src="/images/profile.png"
                   alt="Yash"
                   className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
                 />
@@ -108,7 +108,7 @@ export default function MePage() {
             <div>
               <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight">Crafting digital experiences with purpose.</h2>
               <p className="text-gray-600 leading-relaxed text-xl font-medium">
-                I'm a Third-Year Computer Engineering student based in Thane, India. With a deep fascination for how software impacts the world, I spend my time building projects that bridge the gap between complex logic and intuitive design.
+                I'm a Final-Year Computer Engineering student based in Thane, India. With a deep fascination for how software impacts the world, I spend my time building projects that bridge the gap between complex logic and intuitive design.
               </p>
             </div>
 

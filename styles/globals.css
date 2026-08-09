@@ -123,3 +123,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Avatar frame and adjustable styles */
+.avatar-frame {
+  position: relative;
+  border-radius: 50%;
+  padding: 2px; /* space for gradient border */
+  background: conic-gradient(from 45deg, #ff6ec4, #7873f5, #ff6ec4);
+  /* create a smooth rotating gradient */
+  animation: rotate-gradient 6s linear infinite;
+}
+@keyframes rotate-gradient {
+  to { transform: rotate(360deg); }
+}
+
+.avatar-adjustable img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  /* Filters can be controlled via CSS variable */
+  filter: var(--avatar-filters, none);
+}

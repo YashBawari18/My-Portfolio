@@ -62,7 +62,7 @@ export default function PortfolioPage() {
           {/* Action Buttons */}
           <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-4 mb-8">
             <a
-              href="/Yash_Bawari_Resume.pdf"
+              href="/Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gray-900 text-white px-10 py-4 rounded-full text-base font-bold hover:bg-black transition-all hover:scale-105 active:scale-95 flex items-center gap-2 shadow-xl"
@@ -70,8 +70,8 @@ export default function PortfolioPage() {
               👀 View Resume
             </a>
             <a
-              href="/Yash_Bawari_Resume.pdf"
-              download="Yash_Bawari_Resume"
+               href="/Resume.pdf"
+               download="Resume"
               className="bg-white text-gray-900 border-2 border-gray-100 px-10 py-4 rounded-full text-base font-bold hover:border-gray-200 hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 shadow-sm"
             >
               📄 Download
